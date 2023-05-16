@@ -126,6 +126,19 @@ void reversePrint(List* lista)
     cout << temp->payload << endl;
 }
 
+void insertAfter(List* lista, Node* no, int data)
+{
+    Node* temp = newNode(data);
+    temp->prev = no;
+    temp->next = no->next;
+    if(no->next != nullptr)
+    {
+        no->next->prev = temp;
+    }
+    else lista->tail = temp;
+    no->next = temp;
+}
+
 int main() {
     List* lista1 = newList();
     addHead(lista1, 1);
