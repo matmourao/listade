@@ -216,22 +216,21 @@ void bubbleSort(List* lista)
 {
     Node* temp = lista->head;
     Node* last = lista->tail;
-    bool NotSwapped;
+    bool Swapped = true;
     
-    for(int i=0; i<lenght(lista); i++)
+    while(Swapped)
     {
-        NotSwapped = true;
+        Swapped = false;
         while(temp != last)
         {
             if(temp->payload > temp->next->payload)
             {
                 swapNodes(lista, temp, temp->next);
-                NotSwapped = false;
+                Swapped = true;
                 if(temp->prev == last) last = last->next;
             }
             else temp = temp->next;
         }
-        if(NotSwapped) break;
         temp = lista->head;
         last = last->prev;
     }
@@ -250,6 +249,19 @@ void swapIndex(List* lista, int index1, int index2)
         temp2 = temp2->next;
     }
     swapNodes(lista, temp1, temp2);
+}
+
+void insertAfter(List* lista, Node* no, int data)
+{
+    Node* temp = newNode(data);
+    temp->prev = no;
+    temp->next = no->next;
+    if(no->next != nullptr)
+    {
+        no->next->prev = temp;
+    }
+    else lista->tail = temp;
+    no->next = temp;
 }
 
 int main() {
