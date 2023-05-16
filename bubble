@@ -133,17 +133,8 @@ Node* copyNode(Node* no)
     return temp;
 }
 
-void switchConsec(List* lista, Node* no)
+void switchConsec(List* lista, Node* no1, Node* no2)
 {
-    if(no->next == nullptr)
-    {
-        return;
-    }
-    
-    Node* no1 = no->next->prev;
-    Node* no2 = no->next;
-    cout << no->payload << no->next->payload << endl;
-    
     if(no1->prev == nullptr)
     {
         lista->head = no2;
@@ -156,26 +147,24 @@ void switchConsec(List* lista, Node* no)
     }
     else no2->next->prev = no1; 
     
-    Node* temp = no;
-    no1->prev = no2->prev; 
-    no1->next = no2->next; 
-    no2->prev = no->prev; 
-    no2->next = no->next;
-    
-    cout << no->next->prev->payload << no->next->payload << endl;
+    Node* temp = copyNode(no1);
+    no1->prev = no2; 
+    no1->next = no2->next;
+    no2->next = no1;
+    no2->prev = temp->prev; 
+    free(temp);
 }
 
-void switchNodes(List* lista, Node* no1, Node* no2)
+void swapNodes(List* lista, Node* no1, Node* no2)
 {
     if(no1->next == no2)
     {
-        cout << "teste" << endl;
-        switchConsec(lista, no1);
+        switchConsec(lista, no1, no1->next);
         return;
     }
     if(no2->next == no1)
     {
-        switchConsec(lista, no2);
+        switchConsec(lista, no2, no2->next);
         return;
     }
     
@@ -227,38 +216,54 @@ void bubbleSort(List* lista)
 {
     Node* temp = lista->head;
     Node* last = lista->tail;
+    bool NotSwapped;
     
-    while(last != lista->head)
+    for(int i=0; i<lenght(lista); i++)
     {
-        while(temp->next != nullptr)
+        NotSwapped = true;
+        while(temp != last)
         {
             if(temp->payload > temp->next->payload)
             {
-                switchConsec(lista, temp);
+                swapNodes(lista, temp, temp->next);
+                NotSwapped = false;
+                if(temp->prev == last) last = last->next;
             }
-            temp = temp->next;
+            else temp = temp->next;
         }
-        last = last->prev;
+        if(NotSwapped) break;
         temp = lista->head;
+        last = last->prev;
     }
+}
+
+void swapIndex(List* lista, int index1, int index2)
+{
+    Node* temp1 = lista->head;
+    for(int i=0; i<index1; i++)
+    {
+        temp1 = temp1->next;
+    }
+    Node* temp2 = lista->head;
+    for(int i=0; i<index2; i++)
+    {
+        temp2 = temp2->next;
+    }
+    swapNodes(lista, temp1, temp2);
 }
 
 int main() {
     List* lista1 = newList();
     addHead(lista1, 1);
-    addTail(lista1, 2);
+    addHead(lista1, 2);
     addHead(lista1, 3);
-    addTail(lista1, 4);
+    addHead(lista1, 4);
     addHead(lista1, 5);
     printList(lista1);
     
-    Node* temp1 = lista1->head->next;
-    Node* temp2 = lista1->tail->prev;
-    //switchNodes(lista1, temp1, temp2);
     bubbleSort(lista1);
-    cout << &lista1 <<": ";
     printList(lista1);
-    //reversePrint(lista1);
-    cout << lista1->head->payload;
+    reversePrint(lista1);
+    
     return 0;
 }
