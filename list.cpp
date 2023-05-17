@@ -23,7 +23,6 @@ Node* newNode(int data)
     return temp;
 }
 
-
 List* newList()
 {
     List* temp = (List*) malloc(sizeof(List));
@@ -126,6 +125,108 @@ void reversePrint(List* lista)
     cout << temp->payload << endl;
 }
 
+Node* copyNode(Node* no)
+{
+    Node* temp = newNode(no->payload);
+    temp->next = no->next;
+    temp->prev = no->prev;
+    return temp;
+}
+
+void switchConsec(List* lista, Node* no1, Node* no2)
+{
+    if(no1->prev == nullptr)
+    {
+        lista->head = no2;
+    }
+    else no1->prev->next = no2; 
+    
+    if(no2->next == nullptr)
+    {
+        lista->tail = no1;
+    }
+    else no2->next->prev = no1; 
+    
+    Node* temp = copyNode(no1);
+    no1->prev = no2; 
+    no1->next = no2->next;
+    no2->next = no1;
+    no2->prev = temp->prev; 
+    free(temp);
+}
+
+void swapNodes(List* lista, Node* no1, Node* no2)
+{
+    if(no1->next == no2)
+    {
+        switchConsec(lista, no1, no1->next);
+        return;
+    }
+    if(no2->next == no1)
+    {
+        switchConsec(lista, no2, no2->next);
+        return;
+    }
+    
+    if(no1->prev == nullptr)
+    {
+        lista->head = no2;
+    }
+    else no1->prev->next = no2; 
+    
+    if(no1->next == nullptr)
+    {
+        lista->tail = no2;
+    }
+    else no1->next->prev = no2;
+    
+    if(no2->prev == nullptr)
+    {
+        lista->head = no1;
+    }
+    else no2->prev->next = no1;
+    
+    if(no2->next == nullptr)
+    {
+        lista->tail = no1;
+    }
+    else no2->next->prev = no1; 
+    
+    Node* temp = copyNode(no1);
+    no1->prev = no2->prev; 
+    no1->next = no2->next; 
+    no2->prev = temp->prev; 
+    no2->next = temp->next;
+    free(temp);
+}
+
+int lenght(List* lista)
+{
+    int i=0;
+    Node* temp = lista->head;
+    while(temp != nullptr)
+    {
+        i++;
+        temp = temp->next;
+    }
+    return i;
+}
+
+void swapIndex(List* lista, int index1, int index2)
+{
+    Node* temp1 = lista->head;
+    for(int i=0; i<index1; i++)
+    {
+        temp1 = temp1->next;
+    }
+    Node* temp2 = lista->head;
+    for(int i=0; i<index2; i++)
+    {
+        temp2 = temp2->next;
+    }
+    swapNodes(lista, temp1, temp2);
+}
+
 void insertAfter(List* lista, Node* no, int data)
 {
     Node* temp = newNode(data);
@@ -138,6 +239,7 @@ void insertAfter(List* lista, Node* no, int data)
     else lista->tail = temp;
     no->next = temp;
 }
+
 
 int main() {
     List* lista1 = newList();
