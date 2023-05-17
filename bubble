@@ -251,6 +251,27 @@ void swapIndex(List* lista, int index1, int index2)
     swapNodes(lista, temp1, temp2);
 }
 
+void swapAfter(List* lista, int index, Node* no)
+{
+    Node* temp = lista->head;
+    Node* prox = nullptr;
+    
+    for(int i=0; i<index; i++)
+    {
+        temp = temp->next;
+    }
+    
+    prox = temp->next;
+    temp->next->prev = no;
+    temp->next = no;
+    
+    no->prev->next = no->next;
+    no->next->prev = no->prev;
+    
+    no->prev = temp;
+    no->next = prox;
+}
+
 void insertAfter(List* lista, Node* no, int data)
 {
     Node* temp = newNode(data);
